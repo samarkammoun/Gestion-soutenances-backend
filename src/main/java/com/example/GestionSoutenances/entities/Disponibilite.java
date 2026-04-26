@@ -1,9 +1,7 @@
 package com.example.GestionSoutenances.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,16 +10,20 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreneauHoraire {
+@Builder
+public class Disponibilite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idCreneau;
+    private int idDisponibilite;
 
     private LocalDate date;
+
     private LocalTime heureDebut;
+
     private LocalTime heureFin;
 
-    @OneToOne(mappedBy = "creneauHoraire")
-    private Soutenance soutenance;
+    @ManyToOne
+    @JoinColumn(name = "enseignant_id", nullable = false)
+    private Enseignant enseignant;
 }

@@ -13,7 +13,7 @@ public class Jury {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idJury;
+    private int idJury;
 
     @ManyToOne
     private Enseignant rapporteur;

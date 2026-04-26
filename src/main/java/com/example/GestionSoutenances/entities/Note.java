@@ -13,7 +13,7 @@ public class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idNote;
+    private int idNote;
 
     private float valeur;
     private String commentaire;

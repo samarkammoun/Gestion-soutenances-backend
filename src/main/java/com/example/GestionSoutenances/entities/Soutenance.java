@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -14,7 +16,7 @@ public class Soutenance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idSoutenance;
+    private int idSoutenance;
 
     private String sujet;
     private float moyenne;
@@ -26,7 +28,7 @@ public class Soutenance {
     private Etudiant etudiant;
 
     @ManyToOne
-    private Encadrant encadrant;
+    private Enseignant encadrant;
 
     @ManyToOne
     private Salle salle;

@@ -1,6 +1,9 @@
 package com.example.GestionSoutenances.services;
 
+import com.example.GestionSoutenances.dto.ResultatDto;
 import com.example.GestionSoutenances.dto.SoutenanceRequest;
+import com.example.GestionSoutenances.enums.EnumMention;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.GestionSoutenances.dto.CreneauResult;
@@ -8,7 +11,6 @@ import com.example.GestionSoutenances.entities.*;
 import com.example.GestionSoutenances.repositories.*;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,9 +20,10 @@ public class SoutenanceService {
     private final SoutenanceRepo soutenanceRepository;
     private final EtudiantRepo etudiantRepository;
     private final EnseignantRepo enseignantRepository;
-    private final SalleRepo salleRepository;
     private final CreneauService creneauService;
     private final CreneauHoraireRepo creneauHoraireRepo;
+    private final SoutenanceRepo soutenanceRepo;
+    private final SalleService salleService;
 
     public Soutenance createSoutenance(SoutenanceRequest request) {
 
@@ -51,7 +54,7 @@ public class SoutenanceService {
         CreneauResult creneauChoisi = creneaux.get(0);
 
         List<Salle> sallesDisponibles =
-                salleRepository.findSallesDisponibles(
+                salleService.findSallesDisponibles(
                         creneauChoisi.getDate(),
                         creneauChoisi.getHeureDebut(),
                         creneauChoisi.getHeureFin()
@@ -76,7 +79,7 @@ public class SoutenanceService {
         s.setSalle(salleChoisie);
         s.setJury(jury);
 
-        // 👇 AJOUT IMPORTANT
+        // AJOUT IMPORTANT
         s.setSujet(request.getSujet());
 
         // Créneau
@@ -91,4 +94,75 @@ public class SoutenanceService {
 
         return soutenanceRepository.save(s);
     }
+
+    public List<Soutenance> getAllSoutenances(){
+        return soutenanceRepository.findAll();
+    }
+
+    public Soutenance updateSoutenance(Soutenance soutenance, int id){
+        Soutenance soutenanceToUpdate = soutenanceRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Soutenance inexistante !"));
+        if (soutenanceToUpdate!=null){
+            soutenanceToUpdate.setCreneauHoraire(soutenance.getCreneauHoraire());
+            soutenanceToUpdate.setJury(soutenance.getJury());
+            soutenanceToUpdate.setSujet(soutenance.getSujet());
+            soutenanceToUpdate.setSalle(soutenance.getSalle());
+            soutenanceToUpdate.setEncadrant(soutenance.getEncadrant());
+            return soutenanceRepository.save(soutenanceToUpdate);
+        }
+        return null;
+    }
+
+    public void annulerSoutenance (int id){
+        Soutenance soutenance = soutenanceRepo.findById(id)
+                        .orElseThrow(()-> new EntityNotFoundException("Soutenance inexistante !"));
+        soutenanceRepository.delete(soutenance);
+    }
+
+    public Soutenance getSoutenanceByEtudiant(int id){
+        Etudiant etudiant = etudiantRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Etudiant inexistant !"));
+        return soutenanceRepository.findByEtudiant(etudiant);
+    }
+
+    public void calculerResultat(int id){
+        Soutenance soutenance = soutenanceRepo.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Soutenance inexistante !"));
+        List<Note> notes = soutenance.getNotes();
+        
+        if (notes == null || notes.isEmpty()) {
+            throw new RuntimeException("Aucune note n'a été attribuée");
+        }
+        
+        float moyenne = 0;
+        for (Note note: notes){
+            moyenne += note.getValeur();
+        }
+        moyenne = moyenne / notes.size();
+        soutenance.setMoyenne(moyenne);
+        
+        // Attribution de la mention selon les normes académiques
+        if (moyenne < 12) {
+            soutenance.setMention(EnumMention.PASSABLE);
+        } else if (moyenne < 14) {
+            soutenance.setMention(EnumMention.ASSEZ_BIEN);
+        } else if (moyenne < 16) {
+            soutenance.setMention(EnumMention.BIEN);
+        } else {
+            soutenance.setMention(EnumMention.TRES_BIEN);
+        }
+        
+        soutenanceRepo.save(soutenance);
+    }
+
+    public ResultatDto consulterResultat(int id){
+        Soutenance soutenance = soutenanceRepo.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Soutenance inexistante !"));
+        ResultatDto res = new ResultatDto();
+        res.setMention(soutenance.getMention());
+        res.setMoyenne(soutenance.getMoyenne());
+        return res;
+    }
+
+    
 }

@@ -56,6 +56,8 @@ public class CreneauService {
         return result;
     }
 
+
+    // Permet de trouver un creneau commun entre le jury et encadrant pour une date et une durée déterminée (approximative) de la soutenance
     public List<CreneauResult> trouverCreneauxSoutenance(
             int encadrantId,
             int presidentId,
@@ -93,7 +95,7 @@ public class CreneauService {
 
         for (Disponibilite d : intersection) {
 
-            // 🔥 Ajustement aux heures de travail
+            // Ajustement aux heures de travail
             LocalTime start = d.getHeureDebut().isBefore(HEURE_DEBUT_TRAVAIL)
                     ? HEURE_DEBUT_TRAVAIL
                     : d.getHeureDebut();
@@ -102,7 +104,7 @@ public class CreneauService {
                     ? HEURE_FIN_TRAVAIL
                     : d.getHeureFin();
 
-            // ❌ Si hors plage → ignorer
+            // Si hors plage → ignorer
             if (!start.isBefore(end)) continue;
 
             // Génération des créneaux

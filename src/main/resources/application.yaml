@@ -1,3 +1,18 @@
 spring:
   application:
     name: GestionSoutenances
+  spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/soutenance_db
+    username: postgres
+    password: 123456._.Samar
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # options: none, update, create, create-drop
+    show-sql: true       # affiche les requêtes SQL dans la console
+    properties:
+      hibernate:
+        format_sql: true
+

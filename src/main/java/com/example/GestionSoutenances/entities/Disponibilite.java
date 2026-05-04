@@ -6,6 +6,8 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -25,5 +27,6 @@ public class Disponibilite {
 
     @ManyToOne
     @JoinColumn(name = "enseignant_id", nullable = false)
+    @JsonIgnore
     private Enseignant enseignant;
 }

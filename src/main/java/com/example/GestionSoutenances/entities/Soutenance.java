@@ -1,6 +1,8 @@
 package com.example.GestionSoutenances.entities;
-
 import com.example.GestionSoutenances.enums.EnumMention;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,20 +27,24 @@ public class Soutenance {
     private EnumMention mention;
 
     @OneToOne
+    @JsonIgnoreProperties({"soutenance"})
     private Etudiant etudiant;
 
     @ManyToOne
+    @JsonIgnoreProperties({"soutenancesEncadrees"})
     private Enseignant encadrant;
 
     @ManyToOne
+    @JsonIgnoreProperties({"soutenance"})
     private Salle salle;
 
-    @OneToOne
-    private CreneauHoraire creneauHoraire;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+private CreneauHoraire creneauHoraire;
 
     @OneToMany(mappedBy = "soutenance")
+     @JsonIgnore 
     private List<Note> notes;
 
-    @OneToOne(mappedBy = "soutenance")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "soutenance")
     private Jury jury;
 }

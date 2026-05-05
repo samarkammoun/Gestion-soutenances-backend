@@ -24,6 +24,7 @@ public class SoutenanceService {
     private final CreneauHoraireRepo creneauHoraireRepo;
     private final SoutenanceRepo soutenanceRepo;
     private final SalleService salleService;
+    private final JuryRepo juryRepository;
 
     public Soutenance createSoutenance(SoutenanceRequest request) {
 
@@ -68,9 +69,10 @@ public class SoutenanceService {
 
         // Jury
         Jury jury = new Jury();
-        jury.setPresident(president);
-        jury.setRapporteur(rapporteur);
-        jury.setExaminateur(examinateur);
+jury.setPresident(president);
+jury.setRapporteur(rapporteur);
+jury.setExaminateur(examinateur);
+jury = juryRepository.save(jury);
 
         // Soutenance
         Soutenance s = new Soutenance();
@@ -78,21 +80,22 @@ public class SoutenanceService {
         s.setEncadrant(encadrant);
         s.setSalle(salleChoisie);
         s.setJury(jury);
-
+jury.setSoutenance(s);
         // AJOUT IMPORTANT
         s.setSujet(request.getSujet());
 
         // Créneau
         CreneauHoraire creneauHoraire = new CreneauHoraire();
-        creneauHoraire.setDate(creneauChoisi.getDate());
-        creneauHoraire.setHeureDebut(creneauChoisi.getHeureDebut());
-        creneauHoraire.setHeureFin(creneauChoisi.getHeureFin());
-        creneauHoraire.setSoutenance(s);
+creneauHoraire.setDate(creneauChoisi.getDate());
+creneauHoraire.setHeureDebut(creneauChoisi.getHeureDebut());
+creneauHoraire.setHeureFin(creneauChoisi.getHeureFin());
 
-        creneauHoraireRepo.save(creneauHoraire);
-        s.setCreneauHoraire(creneauHoraire);
+s.setCreneauHoraire(creneauHoraire);
+creneauHoraire.setSoutenance(s);
 
-        return soutenanceRepository.save(s);
+return soutenanceRepository.save(s);
+
+        
     }
 
     public List<Soutenance> getAllSoutenances(){

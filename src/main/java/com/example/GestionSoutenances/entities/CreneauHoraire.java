@@ -1,5 +1,6 @@
 package com.example.GestionSoutenances.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,5 +24,6 @@ public class CreneauHoraire {
     private LocalTime heureFin;
 
     @OneToOne(mappedBy = "creneauHoraire")
+    @JsonIgnore  // ← IGNORE la référence retour vers Soutenance
     private Soutenance soutenance;
 }

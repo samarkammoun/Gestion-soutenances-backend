@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/soutenance_db
     username: postgres
-    password: 123456._.Samar
+    password: hadir1
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -16,3 +16,5 @@ spring:
       hibernate:
         format_sql: true
 
+server:
+  port: 8088  # ← Changez de 8080 à 8088

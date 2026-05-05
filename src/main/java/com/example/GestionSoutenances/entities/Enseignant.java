@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Data
@@ -26,9 +28,11 @@ public class Enseignant {
      * Soutenances où cet enseignant est encadrant
      */
     @OneToMany(mappedBy = "encadrant")
+     @JsonIgnore 
     private List<Soutenance> soutenancesEncadrees;
 
     @OneToMany(mappedBy = "enseignant", cascade = CascadeType.ALL, orphanRemoval = true)
+     @JsonIgnore 
     private List<Disponibilite> disponibilites;
 
 }

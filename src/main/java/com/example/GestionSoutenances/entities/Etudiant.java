@@ -1,5 +1,7 @@
 package com.example.GestionSoutenances.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +21,7 @@ public class Etudiant {
     private String prenom;
     private String email;
 
-    @OneToOne(mappedBy = "etudiant")
+    @OneToOne(mappedBy = "etudiant", orphanRemoval = true)
+    
     private Soutenance soutenance;
 }

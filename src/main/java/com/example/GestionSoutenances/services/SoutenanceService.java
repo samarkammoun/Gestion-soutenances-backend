@@ -167,5 +167,8 @@ return soutenanceRepository.save(s);
         return res;
     }
 
-    
+    public Soutenance getSoutenanceById(int id){
+        return soutenanceRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Soutenance inexistante !"));
+    }
 }

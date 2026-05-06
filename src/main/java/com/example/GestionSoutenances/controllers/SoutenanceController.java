@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/soutenances")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class SoutenanceController {
 
     private final SoutenanceService soutenanceService;
@@ -35,10 +34,12 @@ public class SoutenanceController {
 
     // Attention: getSoutenanceById() n'existe PAS dans SoutenanceService
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable int id) {
-        return ResponseEntity.status(501).body(
-                "Méthode non implémentée. Ajoutez getSoutenanceById() dans SoutenanceService"
-        );
+    public ResponseEntity<?> getSoutenanceById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(soutenanceService.getSoutenanceById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/etudiant/{etudiantId}")
@@ -69,5 +70,13 @@ public class SoutenanceController {
     @GetMapping("/{id}/resultat")
     public ResponseEntity<ResultatDto> getResultat(@PathVariable int id) {
         return ResponseEntity.ok(soutenanceService.consulterResultat(id));
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody Soutenance soutenance) {
+        try {
+            return ResponseEntity.ok(soutenanceService.updateSoutenance(soutenance, id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

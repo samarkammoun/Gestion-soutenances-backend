@@ -8,6 +8,7 @@ import com.example.GestionSoutenances.repositories.NoteRepo;
 import com.example.GestionSoutenances.repositories.SoutenanceRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -43,5 +44,19 @@ public class NoteService {
         note.setSoutenance(soutenance);
 
         return noteRepo.save(note);
+    }
+    public List<Note> getNotesBySoutenanceId(int soutenanceId) {
+        Soutenance soutenance = soutenanceRepo.findById(soutenanceId)
+                .orElseThrow(() -> new RuntimeException("Soutenance introuvable"));
+        return soutenance.getNotes();
+    }
+
+    public Note getNoteBySoutenanceAndEnseignant(int soutenanceId, int enseignantId) {
+        Soutenance soutenance = soutenanceRepo.findById(soutenanceId)
+                .orElseThrow(() -> new RuntimeException("Soutenance introuvable"));
+        return soutenance.getNotes().stream()
+                .filter(n -> n.getEnseignant().getIdEnseignant() == enseignantId)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Note introuvable"));
     }
 }

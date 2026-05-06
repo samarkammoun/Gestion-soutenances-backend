@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/notes")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class NoteController {
 
     private final NoteService noteService;
@@ -37,23 +37,23 @@ public class NoteController {
         }
     }
 
-    // Endpoint GET - retourne une erreur claire car la méthode n'existe PAS
     @GetMapping("/soutenance/{soutenanceId}")
     public ResponseEntity<?> getNotesBySoutenance(@PathVariable int soutenanceId) {
-        return ResponseEntity.status(501).body(
-                "Cette fonctionnalité n'est pas encore implémentée. " +
-                        "Méthode manquante dans NoteService: getNotesBySoutenanceId()"
-        );
+        try {
+            return ResponseEntity.ok(noteService.getNotesBySoutenanceId(soutenanceId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    // Endpoint GET - retourne une erreur claire car la méthode n'existe PAS
     @GetMapping("/soutenance/{soutenanceId}/enseignant/{enseignantId}")
     public ResponseEntity<?> getNoteByJury(
             @PathVariable int soutenanceId,
             @PathVariable int enseignantId) {
-        return ResponseEntity.status(501).body(
-                "Cette fonctionnalité n'est pas encore implémentée. " +
-                        "Méthode manquante dans NoteService: getNoteBySoutenanceAndEnseignant()"
-        );
+        try {
+            return ResponseEntity.ok(noteService.getNoteBySoutenanceAndEnseignant(soutenanceId, enseignantId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

@@ -5,7 +5,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/soutenance_db
     username: postgres
-    password: hadir1
+    password: 123456._.Samar
+
     driver-class-name: org.postgresql.Driver
 
   jpa:

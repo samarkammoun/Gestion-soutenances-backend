@@ -14,4 +14,8 @@ public class JuryService {
     public Jury createJury(Jury jury) {
         return juryRepository.save(jury);
     }
+    public Jury getJuryById(int id) {
+        return juryRepository.findById(id)
+                .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Jury introuvable"));
+    }
 }

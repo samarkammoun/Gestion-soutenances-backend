@@ -12,7 +12,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class AdminController {
 
     private final AdminService adminService;
@@ -29,6 +28,24 @@ public class AdminController {
             response.put("admin", admin);
 
             return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Admin admin) {
+        try {
+            return ResponseEntity.ok(adminService.createAdmin(admin));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(adminService.getAdmin(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
